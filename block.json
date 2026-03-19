@@ -1,0 +1,68 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "satori-digital/popup-button",
+  "version": "1.0.0",
+  "title": "Popup Button",
+  "category": "design",
+  "icon": "external",
+  "description": "Add a button or link that opens a popup with customizable content.",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "uniqueId": {
+      "type": "string",
+      "default": ""
+    },
+    "triggerType": {
+      "type": "string",
+      "default": "button"
+    },
+    "buttonText": {
+      "type": "string",
+      "default": ""
+    },
+    "textColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#000000"
+    },
+    "hoverTextColor": {
+      "type": "string",
+      "default": "#000000"
+    },
+    "hoverBackgroundColor": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "popupSize": {
+      "type": "string",
+      "default": "medium"
+    },
+    "popupBorderRadius": {
+      "type": "string",
+      "default": "lg"
+    },
+    "popupPadding": {
+      "type": "string",
+      "default": "md"
+    },
+    "buttonAlign": {
+      "type": "string",
+      "default": "left"
+    },
+    "buttonBorderRadius": {
+      "type": "string",
+      "default": "md"
+    }
+  },
+  "textdomain": "satori-popup",
+  "editorScript": "file:./build/index.js",
+  "editorStyle": "file:./build/style-index.css",
+  "style": "file:./build/style-index.css",
+  "viewScript": "file:./assets/js/popup.js"
+}

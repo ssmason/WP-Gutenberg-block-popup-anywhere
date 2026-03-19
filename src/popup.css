@@ -1,0 +1,165 @@
+/**
+ * Popup block styles - Tailwind only.
+ *
+ * @package SatoriPopup
+ * @author  Stephen Mason <stephen@satori.digital>
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .satori-popup-block {
+        @apply relative isolate;
+    }
+
+    .satori-popup-trigger-wrap {
+        @apply block mb-0;
+    }
+
+    .satori-popup-trigger {
+        @apply inline-flex items-center justify-center px-6 py-3 text-base font-semibold cursor-pointer transition-colors no-underline border-0;
+    }
+
+    .satori-popup-trigger:hover {
+        @apply ![color:var(--satori-hover-color)] ![background-color:var(--satori-hover-bg)];
+    }
+
+    .satori-popup-overlay {
+        @apply fixed inset-0 z-[999998] flex items-center justify-center p-4 bg-black/50 opacity-0 invisible transition-all pointer-events-none;
+    }
+
+    .satori-popup-overlay.satori-popup-open {
+        @apply opacity-100 visible pointer-events-auto;
+    }
+
+    /* Editor: popup content inline below trigger */
+    .satori-popup-editor.satori-popup-block {
+        @apply flex flex-col gap-4;
+    }
+
+    .satori-popup-editor .satori-popup-trigger-wrap {
+        @apply w-full flex flex-col gap-2;
+    }
+
+    .satori-popup-editor .satori-popup-trigger-wrap[data-align="left"] {
+        @apply items-start;
+    }
+
+    .satori-popup-editor .satori-popup-trigger-wrap[data-align="center"] {
+        @apply items-center;
+    }
+
+    .satori-popup-editor .satori-popup-trigger-wrap[data-align="right"] {
+        @apply items-end;
+    }
+
+    /* Editor: inline popup content with size constraints */
+    .satori-popup-editor .satori-popup-editor-content[data-popup-size="small"] {
+        @apply w-full max-w-[400px];
+    }
+    .satori-popup-editor .satori-popup-editor-content[data-popup-size="medium"] {
+        @apply w-full max-w-[600px];
+    }
+    .satori-popup-editor .satori-popup-editor-content[data-popup-size="large"] {
+        @apply w-full max-w-[800px];
+    }
+    .satori-popup-editor .satori-popup-editor-content[data-popup-size="full"] {
+        @apply w-full max-w-none;
+    }
+
+    /* Editor: align popup content to match trigger */
+    .satori-popup-editor .satori-popup-editor-content[data-align="left"] {
+        @apply self-start;
+    }
+    .satori-popup-editor .satori-popup-editor-content[data-align="center"] {
+        @apply self-center;
+    }
+    .satori-popup-editor .satori-popup-editor-content[data-align="right"] {
+        @apply self-end;
+    }
+
+    .satori-popup-body-open {
+        @apply overflow-hidden;
+    }
+
+    .satori-popup-modal {
+        @apply relative max-h-[90vh] overflow-y-auto rounded-none shadow-none bg-transparent;
+    }
+
+    .satori-popup-size-small {
+        @apply w-full max-w-[400px];
+    }
+
+    .satori-popup-size-medium {
+        @apply w-full max-w-[600px];
+    }
+
+    .satori-popup-size-large {
+        @apply w-full max-w-[800px];
+    }
+
+    .satori-popup-size-full {
+        @apply w-[calc(100%-2rem)] max-w-none;
+    }
+
+    .satori-popup-close {
+        @apply absolute top-2 right-2 z-20 flex items-center justify-center w-10 h-10 p-0 text-2xl leading-none text-gray-700 bg-white/90 border-0 rounded-full cursor-pointer transition-colors shadow-md;
+    }
+
+    .satori-popup-close:hover {
+        @apply text-black bg-white;
+    }
+
+    .satori-popup-content {
+        @apply relative min-h-0;
+    }
+    .satori-popup-content:not([data-popup-padding]) {
+        @apply p-4;
+    }
+    .satori-popup-content[data-popup-padding="none"] {
+        @apply p-0;
+    }
+    .satori-popup-content[data-popup-padding="sm"] {
+        @apply p-2;
+    }
+    .satori-popup-content[data-popup-padding="md"] {
+        @apply p-4;
+    }
+    .satori-popup-content[data-popup-padding="lg"] {
+        @apply p-6;
+    }
+    .satori-popup-content[data-popup-padding="xl"] {
+        @apply p-8;
+    }
+
+    .satori-popup-content .wp-block-cover {
+        @apply w-full min-h-[200px] rounded-lg shadow-xl;
+    }
+    .satori-popup-content[data-popup-radius="none"] .wp-block-cover {
+        @apply rounded-none;
+    }
+    .satori-popup-content[data-popup-radius="sm"] .wp-block-cover {
+        @apply rounded-sm;
+    }
+    .satori-popup-content[data-popup-radius="md"] .wp-block-cover {
+        @apply rounded-md;
+    }
+    .satori-popup-content[data-popup-radius="lg"] .wp-block-cover {
+        @apply rounded-lg;
+    }
+    .satori-popup-content[data-popup-radius="xl"] .wp-block-cover {
+        @apply rounded-xl;
+    }
+    .satori-popup-content[data-popup-radius="2xl"] .wp-block-cover {
+        @apply rounded-2xl;
+    }
+    .satori-popup-content[data-popup-radius="full"] .wp-block-cover {
+        @apply rounded-full;
+    }
+
+    .satori-popup-content .wp-block-cover .wp-block-cover__inner-container {
+        @apply w-full;
+    }
+}
