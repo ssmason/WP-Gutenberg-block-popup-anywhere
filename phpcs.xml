@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<ruleset name="Satori Popup Plugin">
+    <description>PHPCS rules for Satori Popup Button plugin.</description>
+
+    <!-- Scan these paths -->
+    <file>.</file>
+
+    <!-- Use the PEAR standard -->
+    <rule ref="PEAR">
+        <exclude name="PEAR.Commenting.FunctionComment.ParamNameNoMatch"/>
+        <exclude name="PEAR.Commenting.FunctionComment.MissingParamComment"/>
+        <exclude name="PEAR.Commenting.FileComment.MissingVersion"/>
+    </rule>
+
+    <!-- Line length limit: 85 characters -->
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="85"/>
+        </properties>
+    </rule>
+
+    <!-- Doc comment short description must start with capital letter -->
+    <rule ref="Generic.Commenting.DocComment.ShortNotCapital"/>
+
+    <!-- Private method names must be prefixed with underscore (PEAR convention) -->
+    <rule ref="PEAR.NamingConventions.ValidFunctionName.PrivateNoUnderscore"/>
+
+    <!-- Max nesting level: 4 (warn at 5+) -->
+    <rule ref="Generic.Metrics.NestingLevel">
+        <properties>
+            <property name="nestingLevel" value="4"/>
+        </properties>
+    </rule>
+
+    <!-- Exclude generated/vendor files -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/build/*</exclude-pattern>
+
+    <arg name="extensions" value="php"/>
+</ruleset>

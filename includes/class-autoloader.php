@@ -18,6 +18,12 @@ namespace SatoriPopup;
 
 /**
  * Autoloader class.
+ *
+ * @category Plugin
+ * @package  SatoriPopup
+ * @author   Stephen Mason <stephen@satori.digital>
+ * @license  GPL-2.0-or-later https://www.gnu.org/licenses/gpl-2.0.html
+ * @link     https://github.com/satori-digital/satori-popup
  */
 class Autoloader
 {
@@ -56,7 +62,7 @@ class Autoloader
             . $file_name;
 
         if (file_exists($file)) {
-            require $file;
+            include $file;
 
             return true;
         }

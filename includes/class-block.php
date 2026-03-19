@@ -18,6 +18,12 @@ namespace SatoriPopup;
 
 /**
  * Block registration class.
+ *
+ * @category Plugin
+ * @package  SatoriPopup
+ * @author   Stephen Mason <stephen@satori.digital>
+ * @license  GPL-2.0-or-later https://www.gnu.org/licenses/gpl-2.0.html
+ * @link     https://github.com/satori-digital/satori-popup
  */
 class Block
 {
@@ -46,7 +52,7 @@ class Block
      * Renders the block on the frontend.
      *
      * @param array<string, mixed> $attributes Block attributes.
-     * @param string               $content   Saved block content.
+     * @param string               $content    Saved block content.
      *
      * @return string
      */

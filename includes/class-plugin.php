@@ -18,6 +18,12 @@ namespace SatoriPopup;
 
 /**
  * Plugin class.
+ *
+ * @category Plugin
+ * @package  SatoriPopup
+ * @author   Stephen Mason <stephen@satori.digital>
+ * @license  GPL-2.0-or-later https://www.gnu.org/licenses/gpl-2.0.html
+ * @link     https://github.com/satori-digital/satori-popup
  */
 class Plugin
 {
@@ -26,21 +32,21 @@ class Plugin
      *
      * @var Plugin|null
      */
-    private static ?Plugin $instance = null;
+    private static ?Plugin $_instance = null;
 
     /**
      * Block registration instance.
      *
      * @var Block
      */
-    private Block $block;
+    private Block $_block;
 
     /**
      * Asset enqueue instance.
      *
      * @var Assets
      */
-    private Assets $assets;
+    private Assets $_assets;
 
     /**
      * Returns the plugin instance.
@@ -49,11 +55,11 @@ class Plugin
      */
     public static function instance(): Plugin
     {
-        if (self::$instance === null) {
-            self::$instance = new self();
+        if (self::$_instance === null) {
+            self::$_instance = new self();
         }
 
-        return self::$instance;
+        return self::$_instance;
     }
 
     /**
@@ -61,8 +67,8 @@ class Plugin
      */
     private function __construct()
     {
-        $this->block  = new Block();
-        $this->assets = new Assets();
+        $this->_block  = new Block();
+        $this->_assets = new Assets();
     }
 
     /**
@@ -72,7 +78,7 @@ class Plugin
      */
     public function boot(): void
     {
-        add_action('init', [$this->block, 'register'], 20);
-        $this->assets->register();
+        add_action('init', [$this->_block, 'register'], 20);
+        $this->_assets->register();
     }
 }

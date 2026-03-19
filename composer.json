@@ -1,0 +1,21 @@
+{
+    "name": "ssmason/wp-gutenberg-block-popup-anywhere",
+    "description": "Popup Button Gutenberg block",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "composer/installers": "^2.0"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^4.0"
+    },
+    "scripts": {
+        "phpcs": "vendor/bin/phpcs -n .",
+        "phpcbf": "vendor/bin/phpcbf -n ."
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    }
+}
