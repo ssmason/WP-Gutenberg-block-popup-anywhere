@@ -6,16 +6,23 @@
  */
 
 import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
+import { __ } from '@wordpress/i18n';
 import { BORDER_RADIUS_CLASSES } from './constants';
 
 /**
- * Save component – outputs block markup for the frontend.
+ * Shared popup markup for save and deprecated blocks.
  *
- * @param {Object} props            Component props.
- * @param {Object} props.attributes Block attributes.
+ * @param {Object} attrs              Block attributes.
+ * @param {Object} features            Feature flags for backwards compatibility.
+ * @param {boolean} features.triggerWrap      Include trigger-wrap div.
+ * @param {boolean} features.buttonAlign      Include alignment classes.
+ * @param {boolean} features.buttonBorderRadius Use border radius on trigger.
+ * @param {boolean} features.popupBorderRadius   data-popup-radius on content.
+ * @param {boolean} features.popupPadding        data-popup-padding on content.
+ * @param {Object} blockProps          From useBlockProps.save().
  * @return {JSX.Element}
  */
-export default function save({ attributes }) {
+function renderPopupMarkup(attrs, features, blockProps) {
     const {
         uniqueId,
         triggerType,
@@ -29,82 +36,138 @@ export default function save({ attributes }) {
         popupPadding,
         buttonAlign,
         buttonBorderRadius,
-    } = attributes;
+    } = attrs;
 
     const id = uniqueId || '';
     const Tag = triggerType === 'link' ? 'a' : 'button';
     const triggerProps =
         Tag === 'a' ? { href: '#', role: 'button' } : { type: 'button' };
 
-    const alignClass = {
-        left: 'justify-start',
-        center: 'justify-center',
-        right: 'justify-end',
-    }[buttonAlign || 'left'];
-
-    const blockProps = useBlockProps.save({
-        className: `satori-popup-block flex ${alignClass}`,
-    });
-
     const triggerStyle = {
         color: textColor || '#ffffff',
         backgroundColor: backgroundColor || '#000000',
     };
 
-    return (
-        <div {...blockProps}>
-            <div className="satori-popup-trigger-wrap">
-                <Tag
-                    {...triggerProps}
-                    className={`satori-popup-trigger ${BORDER_RADIUS_CLASSES[buttonBorderRadius] ?? BORDER_RADIUS_CLASSES.md}`}
-                    style={triggerStyle}
-                    data-popup-trigger={id}
-                    data-hover-text={hoverTextColor}
-                    data-hover-bg={hoverBackgroundColor}
-                >
-                    {buttonText || 'Open popup'}
-                </Tag>
-            </div>
-            <div
-                className="satori-popup-overlay"
-                data-popup-overlay={id}
-                aria-hidden="true"
+    const triggerClass = features.buttonBorderRadius
+        ? `satori-popup-trigger ${BORDER_RADIUS_CLASSES[buttonBorderRadius] ?? BORDER_RADIUS_CLASSES.md}`
+        : 'satori-popup-trigger';
+
+    const contentDataAttrs = {};
+    if (features.popupBorderRadius) {
+        contentDataAttrs['data-popup-radius'] = popupBorderRadius || 'lg';
+    }
+    if (features.popupPadding) {
+        contentDataAttrs['data-popup-padding'] = popupPadding || 'md';
+    }
+
+    const triggerEl = (
+        <Tag
+            {...triggerProps}
+            className={triggerClass}
+            style={triggerStyle}
+            data-popup-trigger={id}
+            data-hover-text={hoverTextColor}
+            data-hover-bg={hoverBackgroundColor}
+        >
+            {buttonText || __('Open popup', 'satori-popup')}
+        </Tag>
+    );
+
+    const overlayContent = (
+        <div
+            className={`satori-popup-modal satori-popup-size-${popupSize}`}
+            data-popup-modal={id}
+            role="dialog"
+            aria-modal="true"
+            aria-label={__('Popup', 'satori-popup')}
+            tabIndex={-1}
+        >
+            <button
+                type="button"
+                className="satori-popup-close"
+                data-popup-close={id}
+                aria-label={__('Close popup', 'satori-popup')}
             >
-                <div
-                    className={`satori-popup-modal satori-popup-size-${popupSize}`}
-                    data-popup-modal={id}
-                    role="dialog"
-                    aria-modal="true"
-                    aria-labelledby={`popup-title-${id}`}
-                >
-                    <button
-                        type="button"
-                        className="satori-popup-close"
-                        data-popup-close={id}
-                        aria-label="Close"
-                    >
-                        ×
-                    </button>
-                    <div
-                        className="satori-popup-content"
-                        data-popup-radius={popupBorderRadius || 'lg'}
-                        data-popup-padding={popupPadding || 'md'}
-                    >
-                        <InnerBlocks.Content />
-                    </div>
-                </div>
+                ×
+            </button>
+            <div className="satori-popup-content" {...contentDataAttrs}>
+                <InnerBlocks.Content />
             </div>
         </div>
+    );
+
+    const overlay = (
+        <div
+            className="satori-popup-overlay"
+            data-popup-overlay={id}
+            aria-hidden="true"
+        >
+            {overlayContent}
+        </div>
+    );
+
+    if (features.triggerWrap) {
+        return (
+            <div {...blockProps}>
+                <div className="satori-popup-trigger-wrap">
+                    {triggerEl}
+                </div>
+                {overlay}
+            </div>
+        );
+    }
+
+    return (
+        <div {...blockProps}>
+            {triggerEl}
+            {overlay}
+        </div>
+    );
+}
+
+/**
+ * Save component – outputs block markup for the frontend.
+ *
+ * @param {Object} props            Component props.
+ * @param {Object} props.attributes Block attributes.
+ * @return {JSX.Element}
+ */
+export default function save({ attributes }) {
+    const alignClass = {
+        left: 'justify-start',
+        center: 'justify-center',
+        right: 'justify-end',
+    }[attributes.buttonAlign || 'left'];
+    const blockProps = useBlockProps.save({
+        className: `satori-popup-block flex ${alignClass}`,
+    });
+    return renderPopupMarkup(
+        attributes,
+        {
+            triggerWrap: true,
+            buttonAlign: true,
+            buttonBorderRadius: true,
+            popupBorderRadius: true,
+            popupPadding: true,
+        },
+        blockProps
     );
 }
 
 /**
  * Deprecated block versions for backwards compatibility.
  *
+ * When block structure changes, add a new deprecated entry with migrate() to
+ * transform old attributes. Save output must match the structure from that
+ * block version so existing posts render correctly.
+ *
+ * - v3: popup radius, no popup padding
+ * - v2: trigger wrap + button radius, no popup radius
+ * - v1: no trigger wrap, no alignment, no radius
+ *
  * @type {Array<Object>}
  */
 export const deprecated = [
-    /* v3: has data-popup-radius, no data-popup-padding */
     {
         attributes: {
             uniqueId: { type: 'string', default: '' },
@@ -119,84 +182,25 @@ export const deprecated = [
             buttonAlign: { type: 'string', default: 'left' },
             buttonBorderRadius: { type: 'string', default: 'md' },
         },
-        save({ attributes }) {
-            const {
-                uniqueId,
-                triggerType,
-                buttonText,
-                textColor,
-                backgroundColor,
-                hoverTextColor,
-                hoverBackgroundColor,
-                popupSize,
-                popupBorderRadius,
-                buttonAlign,
-                buttonBorderRadius,
-            } = attributes;
-
-            const id = uniqueId || '';
-            const Tag = triggerType === 'link' ? 'a' : 'button';
-            const triggerProps =
-                Tag === 'a' ? { href: '#', role: 'button' } : { type: 'button' };
-
+        save(props) {
             const alignClass = {
                 left: 'justify-start',
                 center: 'justify-center',
                 right: 'justify-end',
-            }[buttonAlign || 'left'];
-
+            }[props.attributes.buttonAlign || 'left'];
             const blockProps = useBlockProps.save({
                 className: `satori-popup-block flex ${alignClass}`,
             });
-
-            const triggerStyle = {
-                color: textColor || '#ffffff',
-                backgroundColor: backgroundColor || '#000000',
-            };
-
-            return (
-                <div {...blockProps}>
-                    <div className="satori-popup-trigger-wrap">
-                        <Tag
-                            {...triggerProps}
-                            className={`satori-popup-trigger ${BORDER_RADIUS_CLASSES[buttonBorderRadius] ?? BORDER_RADIUS_CLASSES.md}`}
-                            style={triggerStyle}
-                            data-popup-trigger={id}
-                            data-hover-text={hoverTextColor}
-                            data-hover-bg={hoverBackgroundColor}
-                        >
-                            {buttonText || 'Open popup'}
-                        </Tag>
-                    </div>
-                    <div
-                        className="satori-popup-overlay"
-                        data-popup-overlay={id}
-                        aria-hidden="true"
-                    >
-                        <div
-                            className={`satori-popup-modal satori-popup-size-${popupSize}`}
-                            data-popup-modal={id}
-                            role="dialog"
-                            aria-modal="true"
-                            aria-labelledby={`popup-title-${id}`}
-                        >
-                            <button
-                                type="button"
-                                className="satori-popup-close"
-                                data-popup-close={id}
-                                aria-label="Close"
-                            >
-                                ×
-                            </button>
-                            <div
-                                className="satori-popup-content"
-                                data-popup-radius={popupBorderRadius || 'lg'}
-                            >
-                                <InnerBlocks.Content />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            return renderPopupMarkup(
+                props.attributes,
+                {
+                    triggerWrap: true,
+                    buttonAlign: true,
+                    buttonBorderRadius: true,
+                    popupBorderRadius: true,
+                    popupPadding: false,
+                },
+                blockProps
             );
         },
         migrate(attributes) {
@@ -206,7 +210,6 @@ export const deprecated = [
             };
         },
     },
-    /* v2: trigger-wrap + button radius, no popup data-popup-radius */
     {
         attributes: {
             uniqueId: { type: 'string', default: '' },
@@ -220,80 +223,25 @@ export const deprecated = [
             buttonAlign: { type: 'string', default: 'left' },
             buttonBorderRadius: { type: 'string', default: 'md' },
         },
-        save({ attributes }) {
-            const {
-                uniqueId,
-                triggerType,
-                buttonText,
-                textColor,
-                backgroundColor,
-                hoverTextColor,
-                hoverBackgroundColor,
-                popupSize,
-                buttonAlign,
-                buttonBorderRadius,
-            } = attributes;
-
-            const id = uniqueId || '';
-            const Tag = triggerType === 'link' ? 'a' : 'button';
-            const triggerProps =
-                Tag === 'a' ? { href: '#', role: 'button' } : { type: 'button' };
-
+        save(props) {
             const alignClass = {
                 left: 'justify-start',
                 center: 'justify-center',
                 right: 'justify-end',
-            }[buttonAlign || 'left'];
-
+            }[props.attributes.buttonAlign || 'left'];
             const blockProps = useBlockProps.save({
                 className: `satori-popup-block flex ${alignClass}`,
             });
-
-            const triggerStyle = {
-                color: textColor || '#ffffff',
-                backgroundColor: backgroundColor || '#000000',
-            };
-
-            return (
-                <div {...blockProps}>
-                    <div className="satori-popup-trigger-wrap">
-                        <Tag
-                            {...triggerProps}
-                            className={`satori-popup-trigger ${BORDER_RADIUS_CLASSES[buttonBorderRadius] ?? BORDER_RADIUS_CLASSES.md}`}
-                            style={triggerStyle}
-                            data-popup-trigger={id}
-                            data-hover-text={hoverTextColor}
-                            data-hover-bg={hoverBackgroundColor}
-                        >
-                            {buttonText || 'Open popup'}
-                        </Tag>
-                    </div>
-                    <div
-                        className="satori-popup-overlay"
-                        data-popup-overlay={id}
-                        aria-hidden="true"
-                    >
-                        <div
-                            className={`satori-popup-modal satori-popup-size-${popupSize}`}
-                            data-popup-modal={id}
-                            role="dialog"
-                            aria-modal="true"
-                            aria-labelledby={`popup-title-${id}`}
-                        >
-                            <button
-                                type="button"
-                                className="satori-popup-close"
-                                data-popup-close={id}
-                                aria-label="Close"
-                            >
-                                ×
-                            </button>
-                            <div className="satori-popup-content">
-                                <InnerBlocks.Content />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            return renderPopupMarkup(
+                props.attributes,
+                {
+                    triggerWrap: true,
+                    buttonAlign: true,
+                    buttonBorderRadius: true,
+                    popupBorderRadius: false,
+                    popupPadding: false,
+                },
+                blockProps
             );
         },
         migrate(attributes) {
@@ -303,7 +251,6 @@ export const deprecated = [
             };
         },
     },
-    /* v1: no trigger-wrap, no alignment/radius */
     {
         attributes: {
             uniqueId: { type: 'string', default: '' },
@@ -315,77 +262,20 @@ export const deprecated = [
             hoverBackgroundColor: { type: 'string', default: '#ffffff' },
             popupSize: { type: 'string', default: 'medium' },
         },
-        /**
-         * Renders deprecated block markup (no trigger-wrap, no alignment/radius).
-         *
-         * @param {Object} props            Component props.
-         * @param {Object} props.attributes Block attributes.
-         * @return {JSX.Element}
-         */
-        save({ attributes }) {
-            const {
-                uniqueId,
-                triggerType,
-                buttonText,
-                textColor,
-                backgroundColor,
-                hoverTextColor,
-                hoverBackgroundColor,
-                popupSize,
-            } = attributes;
-
-            const id = uniqueId || '';
-            const Tag = triggerType === 'link' ? 'a' : 'button';
-            const triggerProps =
-                Tag === 'a' ? { href: '#', role: 'button' } : { type: 'button' };
-
+        save(props) {
             const blockProps = useBlockProps.save({
                 className: 'satori-popup-block',
             });
-
-            const triggerStyle = {
-                color: textColor || '#ffffff',
-                backgroundColor: backgroundColor || '#000000',
-            };
-
-            return (
-                <div {...blockProps}>
-                    <Tag
-                        {...triggerProps}
-                        className="satori-popup-trigger"
-                        style={triggerStyle}
-                        data-popup-trigger={id}
-                        data-hover-text={hoverTextColor}
-                        data-hover-bg={hoverBackgroundColor}
-                    >
-                        {buttonText || 'Open popup'}
-                    </Tag>
-                    <div
-                        className="satori-popup-overlay"
-                        data-popup-overlay={id}
-                        aria-hidden="true"
-                    >
-                        <div
-                            className={`satori-popup-modal satori-popup-size-${popupSize}`}
-                            data-popup-modal={id}
-                            role="dialog"
-                            aria-modal="true"
-                            aria-labelledby={`popup-title-${id}`}
-                        >
-                            <button
-                                type="button"
-                                className="satori-popup-close"
-                                data-popup-close={id}
-                                aria-label="Close"
-                            >
-                                ×
-                            </button>
-                            <div className="satori-popup-content">
-                                <InnerBlocks.Content />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            return renderPopupMarkup(
+                props.attributes,
+                {
+                    triggerWrap: false,
+                    buttonAlign: false,
+                    buttonBorderRadius: false,
+                    popupBorderRadius: false,
+                    popupPadding: false,
+                },
+                blockProps
             );
         },
         migrate(attributes) {

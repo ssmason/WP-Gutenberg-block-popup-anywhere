@@ -37,6 +37,14 @@ class Block
         $block_json_path = SATORI_POPUP_PLUGIN_DIR . 'block.json';
 
         if (! file_exists($block_json_path)) {
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
+                trigger_error(
+                    'Satori Popup: block.json not found.',
+                    E_USER_WARNING
+                );
+            }
+
             return;
         }
 
@@ -50,6 +58,12 @@ class Block
 
     /**
      * Renders the block on the frontend.
+     *
+     * This is a save-based block: markup is output by React save() and stored
+     * in post content. We pass through the content. Attributes are embedded
+     * in the HTML; sanitization happens in the block editor before save.
+     * If server-side attribute rendering is added later, use
+     * sanitize_hex_color() for color attributes.
      *
      * @param array<string, mixed> $attributes Block attributes.
      * @param string               $content    Saved block content.

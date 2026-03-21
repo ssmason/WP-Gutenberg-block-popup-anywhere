@@ -7,9 +7,13 @@
 
 import { __ } from '@wordpress/i18n';
 
+/** Only core/cover allowed as popup wrapper; inner blocks defined in TEMPLATE. */
 export const ALLOWED_BLOCKS = ['core/cover'];
 
+/** Default structure: Cover with heading, paragraph, image, buttons. Authors may change. */
+
 export const TEMPLATE = [
+    /** Cover provides background (color/image); inner blocks are editable content. */
     [
         'core/cover',
         {

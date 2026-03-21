@@ -2,6 +2,10 @@
 
 A WordPress block that adds a button or link which opens a popup modal with customizable content. Built for Bedrock + Sage.
 
+## How it works
+
+The block is **save-based**: React outputs the HTML (including data attributes), which is stored in post content. On the frontend, `assets/js/popup.js` (vanilla JS, separate from the webpack build) reads those attributes to wire open/close behaviour and hover styles. The PHP `Block::render()` simply returns the saved content. See [ARCHITECTURE.md](ARCHITECTURE.md) for details.
+
 ## Features
 
 - **Per-page popups** – Each block instance has its own popup; no global modal
@@ -10,7 +14,7 @@ A WordPress block that adds a button or link which opens a popup modal with cust
 - **Popup content** – InnerBlocks with Cover block (color/image backgrounds), heading, paragraph, image, buttons
 - **Popup sizes** – Small, medium, large, full width
 - **Tailwind styling** – All styles via Tailwind utilities; no raw CSS
-- **Accessibility** – ARIA attributes, focus management, Escape to close, backdrop click to close
+- **Accessibility** – ARIA attributes, focus trap, Escape to close, backdrop click to close, `prefers-reduced-motion`
 
 ## Requirements
 
@@ -34,8 +38,16 @@ npm install
 npm run build
 ```
 
-- `npm run build` – Compiles block JS and Tailwind CSS
+- `npm run build` – Compiles block JS (edit/save) and Tailwind CSS
 - `npm run start` – Watches for changes during development
+
+**Note:** The block uses `editorScript` (webpack-built) and `viewScript` (`assets/js/popup.js`, vanilla JS). Only the editor bundle is built by webpack; popup.js is loaded as-is.
+
+## Troubleshooting
+
+- **Popup doesn’t open** – Ensure `assets/js/popup.js` exists and block.json `viewScript` path is correct. Check the browser console.
+- **Styles missing** – Run `npm run build` to regenerate `build/style-index.css` from Tailwind.
+- **Deprecated blocks show validation errors** – Ensure `migrate()` in save.js correctly maps old attributes.
 
 ## Structure
 
@@ -43,7 +55,8 @@ npm run build
 satori-popup/
 ├── assets/
 │   └── js/
-│       └── popup.js       # Frontend open/close + hover styles
+│       ├── popup.js       # Frontend open/close, hover, focus trap (vanilla JS)
+│       └── popup.asset.php # Version for cache busting
 ├── build/
 │   ├── index.js           # Compiled block (edit/save)
 │   ├── style-index.css    # Compiled Tailwind styles
@@ -83,6 +96,12 @@ satori-popup/
 ## Styling
 
 All styles use Tailwind. The block uses theme color palette when available; custom hex is supported via the color dropdown. Cover block background and image are configured in the Cover block settings.
+
+## Documentation
+
+- [ARCHITECTURE.md](ARCHITECTURE.md) – Boot flow, data flow, data attribute contract
+- [CHANGELOG.md](CHANGELOG.md) – Version history
+- [CONTRIBUTING.md](CONTRIBUTING.md) – Development and contribution guidelines
 
 ## License
 

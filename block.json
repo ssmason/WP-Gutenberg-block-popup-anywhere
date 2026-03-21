@@ -8,7 +8,13 @@
   "icon": "external",
   "description": "Add a button or link that opens a popup with customizable content.",
   "supports": {
-    "html": false
+    "html": false,
+    "anchor": true,
+    "customClassName": true,
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
   },
   "attributes": {
     "uniqueId": {

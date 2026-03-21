@@ -35,6 +35,7 @@ require_once SATORI_POPUP_PLUGIN_DIR . 'includes/class-plugin.php';
 
 /**
  * Boots the plugin on plugins_loaded.
+ * Flow: Autoloader → Plugin::instance() → boot() → Block::register() + Assets::register().
  *
  * @return void
  */

@@ -19,6 +19,11 @@ namespace SatoriPopup;
 /**
  * Assets class.
  *
+ * Block assets (editorScript, editorStyle, style, viewScript) are enqueued
+ * by WordPress from block.json when the block is rendered. This class is
+ * a placeholder for any future global assets (e.g. admin styles, shared
+ * scripts). Script versions use SATORI_POPUP_VERSION via *.asset.php files.
+ *
  * @category Plugin
  * @package  SatoriPopup
  * @author   Stephen Mason <stephen@satori.digital>
@@ -30,9 +35,8 @@ class Assets
     /**
      * Registers hooks for asset enqueue.
      *
-     * Block assets (editorScript, editorStyle, style, viewScript) are enqueued
-     * by WordPress from block.json when the block is rendered. This method
-     * is a placeholder for any future global assets (e.g. admin styles).
+     * Block assets are loaded via block.json metadata. Add global asset
+     * hooks here if needed (e.g. admin_enqueue_scripts).
      *
      * @return void
      */

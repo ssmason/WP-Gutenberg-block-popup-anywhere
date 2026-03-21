@@ -162,4 +162,12 @@
     .satori-popup-content .wp-block-cover .wp-block-cover__inner-container {
         @apply w-full;
     }
+
+    /* Respect user motion preferences (accessibility) */
+    @media (prefers-reduced-motion: reduce) {
+        .satori-popup-overlay,
+        .satori-popup-trigger {
+            @apply transition-none;
+        }
+    }
 }
