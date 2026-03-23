@@ -150,11 +150,6 @@
     .satori-popup-content .wp-block-cover {
         @apply w-full min-h-[200px] rounded-lg shadow-xl;
     }
-
-    /* Frontend: default white overlay when theme color is transparent */
-    .satori-popup-content .wp-block-cover__gradient-background {
-        @apply !bg-white;
-    }
     .satori-popup-content[data-popup-radius="none"] .wp-block-cover {
         @apply rounded-none;
     }
