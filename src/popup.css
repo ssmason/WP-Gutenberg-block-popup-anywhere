@@ -73,7 +73,7 @@
     }
 
     .satori-popup-editor-overlay .satori-popup-editor-content {
-        @apply flex-shrink-0 overflow-y-auto max-h-[85vh];
+        @apply flex-shrink-0 overflow-y-auto max-h-[85vh] bg-white text-black;
     }
 
     /* Editor: overlay popup content size constraints (viewport-relative, breaks out of column) */
