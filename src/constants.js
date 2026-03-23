@@ -20,7 +20,7 @@ export const TEMPLATE = [
             minHeight: 250,
             minHeightUnit: 'px',
             dimRatio: 100,
-            overlayColor: 'contrast',
+            overlayColor: 'background',
         },
         [
             ['core/heading', { level: 2, placeholder: __('Add heading', 'satori-popup') }],
