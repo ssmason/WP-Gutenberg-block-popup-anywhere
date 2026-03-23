@@ -55,9 +55,10 @@
         @apply items-end;
     }
 
-    /* Editor: fixed overlay when editing popup content (breaks out of column) */
+    /* Editor: fixed overlay when editing popup content (breaks out of column).
+     * z-index 99950: below block inserter (99999) so + button dropdown is usable. */
     .satori-popup-editor-overlay {
-        @apply fixed inset-0 z-[100000] flex items-center justify-center p-6 bg-black/50;
+        @apply fixed inset-0 z-[99950] flex items-center justify-center p-6 bg-black/50;
     }
 
     .satori-popup-editor-overlay-inner {
@@ -74,6 +75,16 @@
 
     .satori-popup-editor-overlay .satori-popup-editor-content {
         @apply flex-shrink-0 overflow-y-auto max-h-[85vh] bg-white text-black;
+    }
+
+    /* Editor: force Cover block white/black in overlay (avoids dark overlay confusion) */
+    .satori-popup-editor-overlay .wp-block-cover__gradient-background,
+    .satori-popup-editor-overlay .wp-block-cover .has-background-dim {
+        @apply !bg-white;
+    }
+    .satori-popup-editor-overlay .wp-block-cover,
+    .satori-popup-editor-overlay .wp-block-cover .wp-block-cover__inner-container {
+        @apply !text-black;
     }
 
     /* Editor: overlay popup content size constraints (viewport-relative, breaks out of column) */
