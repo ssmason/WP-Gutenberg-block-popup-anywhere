@@ -99,7 +99,7 @@
     }
     .satori-popup-editor-overlay > *,
     .satori-popup-editor-overlay-inner {
-        @apply pointer-events-none;
+        @apply pointer-events-none w-full max-w-full flex justify-center items-center;
     }
     .satori-popup-editor-content-wrap {
         @apply relative pointer-events-auto;
@@ -119,16 +119,16 @@
         @apply !text-black;
     }
     .satori-popup-editor-overlay .satori-popup-editor-content[data-popup-size="small"] {
-        @apply w-full max-w-[400px];
+        @apply w-[400px] max-w-[90vw];
     }
     .satori-popup-editor-overlay .satori-popup-editor-content[data-popup-size="medium"] {
-        @apply w-full max-w-[600px];
+        @apply w-[600px] max-w-[90vw];
     }
     .satori-popup-editor-overlay .satori-popup-editor-content[data-popup-size="large"] {
-        @apply w-full max-w-[800px];
+        @apply w-[800px] max-w-[90vw];
     }
     .satori-popup-editor-overlay .satori-popup-editor-content[data-popup-size="full"] {
-        @apply w-[min(100%,90vw)] max-w-none;
+        @apply w-[90vw] max-w-none;
     }
     .satori-popup-editor-overlay .satori-popup-editor-content[data-align="left"] {
         @apply self-start;
