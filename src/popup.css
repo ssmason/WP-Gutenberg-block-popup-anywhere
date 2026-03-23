@@ -55,7 +55,53 @@
         @apply items-end;
     }
 
-    /* Editor: inline popup content with size constraints */
+    /* Editor: fixed overlay when editing popup content (breaks out of column) */
+    .satori-popup-editor-overlay {
+        @apply fixed inset-0 z-[100000] flex items-center justify-center p-6 bg-black/50;
+    }
+
+    .satori-popup-editor-overlay-inner {
+        @apply relative flex flex-col items-center justify-center w-full max-h-[90vh] overflow-visible;
+    }
+
+    .satori-popup-editor-content-wrap {
+        @apply relative;
+    }
+
+    .satori-popup-editor-overlay-close {
+        @apply absolute top-2 right-2 z-10 w-8 h-8 min-w-0 p-0 flex items-center justify-center rounded-full bg-white shadow-lg border border-gray-200;
+    }
+
+    .satori-popup-editor-overlay .satori-popup-editor-content {
+        @apply flex-shrink-0 overflow-y-auto max-h-[85vh];
+    }
+
+    /* Editor: overlay popup content size constraints (viewport-relative, breaks out of column) */
+    .satori-popup-editor-overlay .satori-popup-editor-content[data-popup-size="small"] {
+        @apply w-full max-w-[400px];
+    }
+    .satori-popup-editor-overlay .satori-popup-editor-content[data-popup-size="medium"] {
+        @apply w-full max-w-[600px];
+    }
+    .satori-popup-editor-overlay .satori-popup-editor-content[data-popup-size="large"] {
+        @apply w-full max-w-[800px];
+    }
+    .satori-popup-editor-overlay .satori-popup-editor-content[data-popup-size="full"] {
+        @apply w-[min(100%,90vw)] max-w-none;
+    }
+
+    /* Editor: overlay align (centered by default for overlay) */
+    .satori-popup-editor-overlay .satori-popup-editor-content[data-align="left"] {
+        @apply self-start;
+    }
+    .satori-popup-editor-overlay .satori-popup-editor-content[data-align="center"] {
+        @apply self-center;
+    }
+    .satori-popup-editor-overlay .satori-popup-editor-content[data-align="right"] {
+        @apply self-end;
+    }
+
+    /* Editor: inline popup content with size constraints (legacy, when not in overlay) */
     .satori-popup-editor .satori-popup-editor-content[data-popup-size="small"] {
         @apply w-full max-w-[400px];
     }
