@@ -55,6 +55,19 @@
         @apply items-end;
     }
 
+    /* Editor: inline popup content – white background for readability */
+    .satori-popup-editor .satori-popup-editor-content {
+        @apply bg-white text-black;
+    }
+    .satori-popup-editor .wp-block-cover__gradient-background,
+    .satori-popup-editor .wp-block-cover .has-background-dim {
+        @apply !bg-white;
+    }
+    .satori-popup-editor .wp-block-cover,
+    .satori-popup-editor .wp-block-cover .wp-block-cover__inner-container {
+        @apply !text-black;
+    }
+
     /* Editor: inline popup content with size constraints */
     .satori-popup-editor .satori-popup-editor-content[data-popup-size="small"] {
         @apply w-full max-w-[400px];

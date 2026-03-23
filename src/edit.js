@@ -292,6 +292,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             template={TEMPLATE}
                             templateLock={false}
                             allowedBlocks={ALLOWED_BLOCKS}
+                            renderAppender={false}
                         />
                     </div>
                 )}
