@@ -309,7 +309,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                         popupPadding || 'md'
                                     }
                                     data-align={buttonAlign || 'left'}
-                                    onClick={(e) => e.stopPropagation()}
                                 >
                                     <Button
                                         variant="tertiary"

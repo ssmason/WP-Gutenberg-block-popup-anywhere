@@ -55,29 +55,25 @@
         @apply items-end;
     }
 
-    /* Editor: fixed overlay when editing popup content (breaks out of column).
-     * z-index 99950: below block inserter (99999) so + button dropdown is usable. */
+    /* Editor: overlay when editing – backdrop has pointer-events-none so
+     * clicks pass through to sidebar/list view/inserter. Content has
+     * pointer-events-auto. z-index 99950: below block inserter (99999). */
     .satori-popup-editor-overlay {
-        @apply fixed inset-0 z-[99950] flex items-center justify-center p-6 bg-black/50;
+        @apply fixed inset-0 z-[99950] flex items-center justify-center p-6 bg-black/50 pointer-events-none;
     }
-
+    .satori-popup-editor-overlay > *,
     .satori-popup-editor-overlay-inner {
-        @apply relative flex flex-col items-center justify-center w-full max-h-[90vh] overflow-visible;
+        @apply pointer-events-none;
     }
-
     .satori-popup-editor-content-wrap {
-        @apply relative;
+        @apply relative pointer-events-auto;
     }
-
     .satori-popup-editor-overlay-close {
         @apply absolute top-2 right-2 z-10 w-8 h-8 min-w-0 p-0 flex items-center justify-center rounded-full bg-white shadow-lg border border-gray-200;
     }
-
     .satori-popup-editor-overlay .satori-popup-editor-content {
         @apply flex-shrink-0 overflow-y-auto max-h-[85vh] bg-white text-black;
     }
-
-    /* Editor: force Cover block white/black in overlay (avoids dark overlay confusion) */
     .satori-popup-editor-overlay .wp-block-cover__gradient-background,
     .satori-popup-editor-overlay .wp-block-cover .has-background-dim {
         @apply !bg-white;
@@ -86,8 +82,6 @@
     .satori-popup-editor-overlay .wp-block-cover .wp-block-cover__inner-container {
         @apply !text-black;
     }
-
-    /* Editor: overlay popup content size constraints (viewport-relative, breaks out of column) */
     .satori-popup-editor-overlay .satori-popup-editor-content[data-popup-size="small"] {
         @apply w-full max-w-[400px];
     }
@@ -100,8 +94,6 @@
     .satori-popup-editor-overlay .satori-popup-editor-content[data-popup-size="full"] {
         @apply w-[min(100%,90vw)] max-w-none;
     }
-
-    /* Editor: overlay align (centered by default for overlay) */
     .satori-popup-editor-overlay .satori-popup-editor-content[data-align="left"] {
         @apply self-start;
     }
@@ -112,7 +104,7 @@
         @apply self-end;
     }
 
-    /* Editor: inline popup content with size constraints (legacy, when not in overlay) */
+    /* Editor: inline popup content with size constraints */
     .satori-popup-editor .satori-popup-editor-content[data-popup-size="small"] {
         @apply w-full max-w-[400px];
     }
