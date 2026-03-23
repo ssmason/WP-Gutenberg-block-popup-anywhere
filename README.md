@@ -43,6 +43,41 @@ npm run build
 
 **Note:** The block uses `editorScript` (webpack-built) and `viewScript` (`assets/js/popup.js`, vanilla JS). Only the editor bundle is built by webpack; popup.js is loaded as-is.
 
+## Testing (Cypress E2E)
+
+Cypress end-to-end tests cover block settings, editor behaviour, frontend render, and CTA functionality.
+
+**Prerequisites**
+
+- A running WordPress site with the plugin activated
+- Default admin user (`admin` / `password`) or override in `cypress/support/commands.js`
+
+**Run tests**
+
+```bash
+# Point Cypress at your WordPress site (required)
+export CYPRESS_BASE_URL=https://your-site.local
+
+# Run all tests (headless)
+npm run cypress:run
+
+# Open Cypress UI (interactive)
+npm run cypress:open
+```
+
+**Test suites**
+
+| File | Coverage |
+|------|----------|
+| `cypress/e2e/popup-block-settings.cy.js` | Inspector panels (Trigger, Popup style, Colors), setting persistence |
+| `cypress/e2e/popup-block-editor.cy.js` | Block insertion, Edit/Hide popup content toggle |
+| `cypress/e2e/popup-block-frontend.cy.js` | Frontend DOM, open/close, Escape, backdrop click |
+| `cypress/e2e/popup-block-cta.cy.js` | Button vs link CTA, text display, click behaviour |
+
+**Environment**
+
+Set `CYPRESS_BASE_URL` to your WordPress URL (e.g. `http://localhost:8000`, `https://webgains.local`). The login command assumes default WP admin credentials; change them in `cypress/support/commands.js` if needed.
+
 ## Troubleshooting
 
 - **Popup doesn’t open** – Ensure `assets/js/popup.js` exists and block.json `viewScript` path is correct. Check the browser console.
@@ -53,6 +88,15 @@ npm run build
 
 ```
 satori-popup/
+├── cypress/
+│   ├── e2e/                    # E2E test specs
+│   │   ├── popup-block-settings.cy.js
+│   │   ├── popup-block-editor.cy.js
+│   │   ├── popup-block-frontend.cy.js
+│   │   └── popup-block-cta.cy.js
+│   └── support/
+│       ├── commands.js        # Custom Cypress commands
+│       └── e2e.js
 ├── assets/
 │   └── js/
 │       ├── popup.js       # Frontend open/close, hover, focus trap (vanilla JS)

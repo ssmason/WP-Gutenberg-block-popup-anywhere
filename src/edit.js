@@ -5,6 +5,7 @@
  * @author  Stephen Mason <stephen@satori.digital>
  */
 
+import { createPortal } from 'react-dom';
 import {
     InnerBlocks,
     useBlockProps,
@@ -280,21 +281,60 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                             : __('Edit popup content', 'satori-popup')}
                     </Button>
                 </div>
-                {isContentExpanded && (
-                    <div
-                        className="satori-popup-editor-content satori-popup-content"
-                        data-popup-size={popupSize || 'medium'}
-                        data-popup-radius={popupBorderRadius || 'lg'}
-                        data-popup-padding={popupPadding || 'md'}
-                        data-align={buttonAlign || 'left'}
-                    >
-                        <InnerBlocks
-                            template={TEMPLATE}
-                            templateLock={false}
-                            allowedBlocks={ALLOWED_BLOCKS}
-                        />
-                    </div>
-                )}
+                {isContentExpanded &&
+                    createPortal(
+                        <div
+                            className="satori-popup-editor-overlay"
+                            role="dialog"
+                            aria-modal="true"
+                            aria-label={__(
+                                'Edit popup content',
+                                'satori-popup'
+                            )}
+                            onClick={(e) => {
+                                if (e.target === e.currentTarget) {
+                                    setIsContentExpanded(false);
+                                }
+                            }}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Escape') {
+                                    setIsContentExpanded(false);
+                                }
+                            }}
+                        >
+                            <div className="satori-popup-editor-overlay-inner">
+                                <Button
+                                    variant="tertiary"
+                                    className="satori-popup-editor-overlay-close"
+                                    onClick={() =>
+                                        setIsContentExpanded(false)
+                                    }
+                                    icon="no-alt"
+                                    label={__('Close', 'satori-popup')}
+                                    aria-label={__('Close', 'satori-popup')}
+                                />
+                                <div
+                                    className="satori-popup-editor-content satori-popup-content"
+                                    data-popup-size={popupSize || 'medium'}
+                                    data-popup-radius={
+                                        popupBorderRadius || 'lg'
+                                    }
+                                    data-popup-padding={
+                                        popupPadding || 'md'
+                                    }
+                                    data-align={buttonAlign || 'left'}
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    <InnerBlocks
+                                        template={TEMPLATE}
+                                        templateLock={false}
+                                        allowedBlocks={ALLOWED_BLOCKS}
+                                    />
+                                </div>
+                            </div>
+                        </div>,
+                        document.body
+                    )}
             </div>
         </>
     );
