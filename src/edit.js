@@ -292,11 +292,6 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                                 'satori-popup'
                             )}
                             tabIndex={-1}
-                            onClick={(e) => {
-                                if (e.target === e.currentTarget) {
-                                    setIsContentExpanded(false);
-                                }
-                            }}
                             onKeyDown={(e) => {
                                 if (e.key === 'Escape') {
                                     setIsContentExpanded(false);
