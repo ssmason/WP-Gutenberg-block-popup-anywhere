@@ -282,61 +282,17 @@ export default function Edit({ attributes, setAttributes, clientId }) {
                 </div>
                 {isContentExpanded && (
                     <div
-                        className="satori-popup-editor-overlay"
-                        role="dialog"
-                        aria-modal="true"
-                        aria-label={__(
-                            'Edit popup content',
-                            'satori-popup'
-                        )}
-                        tabIndex={-1}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Escape') {
-                                setIsContentExpanded(false);
-                            }
-                        }}
+                        className="satori-popup-editor-content satori-popup-content"
+                        data-popup-size={popupSize || 'medium'}
+                        data-popup-radius={popupBorderRadius || 'lg'}
+                        data-popup-padding={popupPadding || 'md'}
+                        data-align={buttonAlign || 'left'}
                     >
-                        <div className="satori-popup-editor-overlay-inner">
-                            <div
-                                className="satori-popup-editor-content satori-popup-content satori-popup-editor-content-wrap"
-                                data-popup-size={popupSize || 'medium'}
-                                data-popup-radius={
-                                    popupBorderRadius || 'lg'
-                                }
-                                data-popup-padding={
-                                    popupPadding || 'md'
-                                }
-                                data-align={buttonAlign || 'left'}
-                            >
-                                <Button
-                                    variant="tertiary"
-                                    className="satori-popup-editor-overlay-close"
-                                    onClick={() =>
-                                        setIsContentExpanded(false)
-                                    }
-                                    aria-label={__(
-                                        'Close',
-                                        'satori-popup'
-                                    )}
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                        width="24"
-                                        height="24"
-                                        aria-hidden="true"
-                                    >
-                                        <path d="M18.4 4L12 10.4L5.6 4L4 5.6L10.4 12L4 18.4L5.6 20L12 13.6L18.4 20L20 18.4L13.6 12L20 5.6L18.4 4Z" />
-                                    </svg>
-                                </Button>
-                                <InnerBlocks
-                                    template={TEMPLATE}
-                                    templateLock={false}
-                                    allowedBlocks={ALLOWED_BLOCKS}
-                                />
-                            </div>
-                        </div>
+                        <InnerBlocks
+                            template={TEMPLATE}
+                            templateLock={false}
+                            allowedBlocks={ALLOWED_BLOCKS}
+                        />
                     </div>
                 )}
             </div>
