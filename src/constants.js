@@ -23,8 +23,8 @@ export const TEMPLATE = [
             customOverlayColor: '#ffffff',
         },
         [
-            ['core/heading', { level: 2, placeholder: __('Add heading', 'satori-popup'), customTextColor: '#000000' }],
-            ['core/paragraph', { placeholder: __('Add content…', 'satori-popup'), customTextColor: '#000000' }],
+            ['core/heading', { level: 2, placeholder: __('Add heading', 'satori-popup') }],
+            ['core/paragraph', { placeholder: __('Add content…', 'satori-popup') }],
             ['core/image', {}],
             ['core/buttons', {}],
         ],
