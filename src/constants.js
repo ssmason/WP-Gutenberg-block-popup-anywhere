@@ -21,6 +21,7 @@ export const TEMPLATE = [
             minHeightUnit: 'px',
             dimRatio: 100,
             customOverlayColor: '#ffffff',
+            isDark: false,
         },
         [
             ['core/heading', { level: 2, placeholder: __('Add heading', 'satori-popup') }],
