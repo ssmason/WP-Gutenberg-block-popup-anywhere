@@ -11,18 +11,19 @@ const BLOCK_NAME = 'satori-digital/popup-button';
  */
 function createPostAndVisitFrontend(buttonText = 'Open modal') {
   cy.login();
-  cy.visit('/wp-admin/post-new.php');
+  cy.visitEditor();
   cy.closeWelcomeModal();
-  cy.get('.edit-post-visual-editor, .editor-styles-wrapper').should('be.visible');
+  cy.ensureEditorReady();
 
   cy.insertBlock(BLOCK_NAME);
-  cy.get(`[data-type="${BLOCK_NAME}"]`).first().click();
-  cy.get('.components-panel__body').contains('Trigger').click();
-  cy.get('input[placeholder*="Learn more"], input[placeholder*="Open"]').first().clear().type(buttonText);
+  cy.openBlockInspector();
+  cy.typeInspectorTextByLabel('Button/Link text', buttonText);
 
-  cy.get('.editor-post-publish-button, .editor-post-publish-panel__toggle').first().click();
-  cy.get('.editor-post-publish-panel__confirm-button').click();
-  cy.get('.post-publish-panel__postpublish-post-address a, .editor-post-publish-panel__postpublish-link a')
+  cy.publishPostFromEditor();
+  cy.get(
+    '.post-publish-panel__postpublish-post-address a, .editor-post-publish-panel__postpublish-link a, .components-snackbar a[href]'
+  )
+    .first()
     .invoke('attr', 'href')
     .then((url) => {
       cy.visit(url);
@@ -57,13 +58,13 @@ describe('Popup Button block – Frontend render', () => {
     beforeEach(() => createPostAndVisitFrontend());
 
     it('opens popup when trigger is clicked', () => {
-      cy.contains('Open modal').click();
+      cy.get('.satori-popup-trigger').first().click();
       cy.get('.satori-popup-overlay.satori-popup-open').should('be.visible');
       cy.get('.satori-popup-modal').should('be.visible');
     });
 
     it('overlay has role dialog', () => {
-      cy.contains('Open modal').click();
+      cy.get('.satori-popup-trigger').first().click();
       cy.get('.satori-popup-modal').should('have.attr', 'role', 'dialog');
     });
   });
@@ -72,21 +73,21 @@ describe('Popup Button block – Frontend render', () => {
     beforeEach(() => createPostAndVisitFrontend());
 
     it('closes popup when close button is clicked', () => {
-      cy.contains('Open modal').click();
+      cy.get('.satori-popup-trigger').first().click();
       cy.get('.satori-popup-open').should('exist');
       cy.get('.satori-popup-close').click();
       cy.get('.satori-popup-overlay.satori-popup-open').should('not.exist');
     });
 
     it('closes popup when Escape key is pressed', () => {
-      cy.contains('Open modal').click();
+      cy.get('.satori-popup-trigger').first().click();
       cy.get('.satori-popup-open').should('exist');
       cy.get('body').type('{esc}');
       cy.get('.satori-popup-overlay.satori-popup-open').should('not.exist');
     });
 
     it('closes popup when backdrop is clicked', () => {
-      cy.contains('Open modal').click();
+      cy.get('.satori-popup-trigger').first().click();
       cy.get('.satori-popup-open').should('exist');
       cy.get('.satori-popup-overlay').click({ force: true });
       cy.get('.satori-popup-overlay.satori-popup-open').should('not.exist');

@@ -50,14 +50,16 @@ Cypress end-to-end tests cover block settings, editor behaviour, frontend render
 **Prerequisites**
 
 - A running WordPress site with the plugin activated
-- Default admin user (`admin` / `password`) or override in `cypress/support/commands.js`
+- An admin user (set `WP_USER` and `WP_PASSWORD` in `cypress.env.json`)
+
+**Setup (required)**
+
+1. Copy `cypress.env.json.example` to `cypress.env.json`
+2. Set `baseUrl`, `WP_USER`, and `WP_PASSWORD` to match your WordPress site
 
 **Run tests**
 
 ```bash
-# Point Cypress at your WordPress site (required)
-export CYPRESS_BASE_URL=https://your-site.local
-
 # Run all tests (headless)
 npm run cypress:run
 
@@ -69,6 +71,7 @@ npm run cypress:open
 
 | File | Coverage |
 |------|----------|
+| `cypress/e2e/login.cy.js` | WordPress login reaches wp-admin |
 | `cypress/e2e/popup-block-settings.cy.js` | Inspector panels (Trigger, Popup style, Colors), setting persistence |
 | `cypress/e2e/popup-block-editor.cy.js` | Block insertion, Edit/Hide popup content toggle |
 | `cypress/e2e/popup-block-frontend.cy.js` | Frontend DOM, open/close, Escape, backdrop click |
@@ -76,7 +79,11 @@ npm run cypress:open
 
 **Environment**
 
-Set `CYPRESS_BASE_URL` to your WordPress URL (e.g. `http://localhost:8000`, `https://webgains.local`). The login command assumes default WP admin credentials; change them in `cypress/support/commands.js` if needed.
+In `cypress.env.json`, set:
+
+- `baseUrl` – Your WordPress URL (e.g. `http://localhost:8080`)
+- `WP_USER` / `WP_PASSWORD` – Login credentials for an existing admin user
+- `WP_PATH` – WordPress path prefix: `/wp` for Bedrock, `""` for standard WP
 
 ## Troubleshooting
 
@@ -90,6 +97,7 @@ Set `CYPRESS_BASE_URL` to your WordPress URL (e.g. `http://localhost:8000`, `htt
 satori-popup/
 ├── cypress/
 │   ├── e2e/                    # E2E test specs
+│   │   ├── login.cy.js
 │   │   ├── popup-block-settings.cy.js
 │   │   ├── popup-block-editor.cy.js
 │   │   ├── popup-block-frontend.cy.js

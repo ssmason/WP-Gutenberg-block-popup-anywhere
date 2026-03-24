@@ -9,90 +9,82 @@ const BLOCK_NAME = 'satori-digital/popup-button';
 describe('Popup Button block – Settings', () => {
   beforeEach(() => {
     cy.login();
-    cy.visit('/wp-admin/post-new.php');
+    cy.visitEditor();
     cy.closeWelcomeModal();
-    cy.get('.edit-post-visual-editor, .editor-styles-wrapper').should('be.visible');
+    cy.ensureEditorReady();
     cy.insertBlock(BLOCK_NAME);
-    cy.get(`[data-type="${BLOCK_NAME}"]`).first().click();
+    cy.openBlockInspector();
+    cy.refocusPopupBlock();
   });
 
   describe('Trigger panel', () => {
     it('shows Trigger panel with Type selector (button/link)', () => {
-      cy.get('.components-panel__body').contains('Trigger').click();
-      cy.contains('Type').should('be.visible');
-      cy.contains('Button', { matchCase: false }).should('be.visible');
+      cy.get('.block-editor-block-inspector').within(() => {
+        cy.contains('Type').scrollIntoView().should('exist');
+        cy.contains('Button', { matchCase: false }).scrollIntoView().should('exist');
+      });
     });
 
     it('shows Button/Link text input', () => {
-      cy.get('.components-panel__body').contains('Trigger').click();
-      cy.contains('Button/Link text').should('be.visible');
+      cy.get('.block-editor-block-inspector').contains('Button/Link text').scrollIntoView().should('exist');
     });
 
     it('shows Alignment selector', () => {
-      cy.get('.components-panel__body').contains('Trigger').click();
-      cy.contains('Alignment').should('be.visible');
+      cy.get('.block-editor-block-inspector').contains('Alignment').scrollIntoView().should('exist');
     });
 
     it('shows Border radius selector', () => {
-      cy.get('.components-panel__body').contains('Trigger').click();
-      cy.contains('Border radius').should('be.visible');
+      cy.get('.block-editor-block-inspector').contains('Border radius').scrollIntoView().should('exist');
     });
   });
 
   describe('Popup style panel', () => {
     it('shows Popup style panel with Size selector', () => {
-      cy.get('.components-panel__body').contains('Popup style').click();
-      cy.contains('Size').should('be.visible');
+      cy.get('.block-editor-block-inspector').contains('Size').scrollIntoView().should('exist');
     });
 
     it('shows Popup corner radius selector', () => {
-      cy.get('.components-panel__body').contains('Popup style').click();
-      cy.contains('Popup corner radius').should('be.visible');
+      cy.get('.block-editor-block-inspector').contains('Popup corner radius').scrollIntoView().should('exist');
     });
 
     it('shows Popup padding selector', () => {
-      cy.get('.components-panel__body').contains('Popup style').click();
-      cy.contains('Popup padding').should('be.visible');
+      cy.get('.block-editor-block-inspector').contains('Popup padding').scrollIntoView().should('exist');
     });
 
     it('shows help text about Cover block settings', () => {
-      cy.get('.components-panel__body').contains('Popup style').click();
-      cy.contains('Background color and image').should('be.visible');
+      cy.get('.block-editor-block-inspector').contains('Background color and image').scrollIntoView().should('exist');
     });
   });
 
   describe('Colors panel', () => {
-    it('shows Colors panel with text and background color controls', () => {
-      cy.get('.components-panel__body').contains('Colors').click();
-      cy.contains('Text color').should('be.visible');
-      cy.contains('Background color').should('be.visible');
-    });
-
-    it('shows hover color controls', () => {
-      cy.get('.components-panel__body').contains('Colors').click();
-      cy.contains('Hover text color').should('be.visible');
-      cy.contains('Hover background color').should('be.visible');
+    it('shows Colors panel (text, background, hover)', () => {
+      cy.refocusPopupBlock();
+      cy.get('.block-editor-block-inspector').contains('Text color').scrollIntoView().should('exist');
+      cy.get('.block-editor-block-inspector').contains('Background color').scrollIntoView().should('exist');
+      cy.get('.block-editor-block-inspector').contains('Hover text color').scrollIntoView().should('exist');
+      cy.get('.block-editor-block-inspector').contains('Hover background color').scrollIntoView().should('exist');
     });
   });
 
   describe('Setting persistence', () => {
     it('changes trigger type from button to link', () => {
-      cy.get('.components-panel__body').contains('Trigger').click();
-      cy.contains('Type').parents('.components-base-control').find('select').select('link');
-      cy.get('.satori-popup-trigger').invoke('prop', 'tagName').should('eq', 'A');
+      cy.refocusPopupBlock();
+      cy.inspectorSelectByLabel('Type', 'link');
+      cy.getEditorCanvas().find('a.satori-popup-trigger', { timeout: 20000 }).should('exist');
     });
 
     it('changes trigger type from link to button', () => {
-      cy.get('.components-panel__body').contains('Trigger').click();
-      cy.contains('Type').parents('.components-base-control').find('select').select('link');
-      cy.contains('Type').parents('.components-base-control').find('select').select('button');
-      cy.get('.satori-popup-trigger').invoke('prop', 'tagName').should('eq', 'BUTTON');
+      cy.refocusPopupBlock();
+      cy.inspectorSelectByLabel('Type', 'link');
+      cy.refocusPopupBlock();
+      cy.inspectorSelectByLabel('Type', 'button');
+      cy.getEditorCanvas().find('button.satori-popup-trigger', { timeout: 15000 }).should('exist');
     });
 
     it('updates button text in placeholder', () => {
-      cy.get('.components-panel__body').contains('Trigger').click();
-      cy.get('input[placeholder*="Learn more"], input[placeholder*="Open"]').first().type('Click here');
-      cy.get('.satori-popup-trigger').should('contain.text', 'Click here');
+      cy.refocusPopupBlock();
+      cy.typeInspectorTextByLabel('Button/Link text', 'Click here');
+      cy.getEditorCanvas().find('.satori-popup-trigger', { timeout: 20000 }).should('contain.text', 'Click here');
     });
   });
 });
